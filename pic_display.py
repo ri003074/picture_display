@@ -5,41 +5,51 @@ from PIL import Image
 
 def pic_display():
     st.set_page_config(
-        layout="wide"
+        page_title="Wide Page",  # Page title
+        layout="wide"  # Set layout to "wide"
     )
 
-    # init session state
+    # Initialize session state for directory path and reload flag
     if "directory_path" not in st.session_state:
         st.session_state["directory_path"] = ""
+    if "reload" not in st.session_state:
+        st.session_state["reload"] = False
 
-    st.sidebar.write("Specify Directory")
+    # Sidebar instructions
+    st.sidebar.write("Please specify a directory containing PNG files.")
 
-    directory_path = st.sidebar.text_input("Input Dir Path", key="directory_path")
+    # Directory path input field
+    directory_path = st.sidebar.text_input("Enter directory path", key="directory_path")
 
-    # auto reload
-    image_width = st.sidebar.slider("Pic Width (px)", min_value=50, max_value=400, value=150, step=10)
+    # Image width and number of columns settings
+    image_width = st.sidebar.slider("Image width (px)", min_value=50, max_value=400, value=150, step=10)
     num_columns = st.sidebar.slider("Number of Columns", min_value=1, max_value=5, value=2, step=1)
 
-    # display png files if directory_path is specified
+    # Reload button to refresh the images
+    if st.sidebar.button("Reload"):
+        st.session_state["reload"] = not st.session_state["reload"]  # Toggle reload flag
+
+    # Display images if a valid directory path is provided
     if directory_path:
-        # directory check
+        # Check if the directory exists
         if os.path.isdir(directory_path):
-            # get png files
+            # Get all PNG files in the directory
             png_files = [f for f in os.listdir(directory_path) if f.endswith('.png')]
 
-            # if png file exists, display
+            # Display PNG files if they exist
             if png_files:
-                st.title("PNG Files Display")
+                st.title("PNG File Gallery")
 
-                # 指定された数だけ横に並べて表示
+                # Display images in specified number of columns
                 for i in range(0, len(png_files), num_columns):
-                    cols = st.columns(num_columns)
+                    cols = st.columns(num_columns)  # Create the specified number of columns
                     for j in range(num_columns):
-                        if i + j < len(png_files):
+                        if i + j < len(png_files):  # Check index range
                             file_name = png_files[i + j]
                             file_path = os.path.join(directory_path, file_name)
                             image = Image.open(file_path)
 
+                            # Display image and caption in each column
                             with cols[j]:
                                 st.image(image, caption=file_name, width=image_width)
             else:
@@ -47,4 +57,4 @@ def pic_display():
         else:
             st.error("Invalid directory path.")
     else:
-        st.info("Please specify a directory")
+        st.info("Please specify a directory.")
