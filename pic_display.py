@@ -5,7 +5,7 @@ from PIL import Image
 
 def pic_display():
     st.set_page_config(
-        page_title="Wide Page",  # Page title
+        page_title="Image Display",  # Page title
         layout="wide"  # Set layout to "wide"
     )
 
