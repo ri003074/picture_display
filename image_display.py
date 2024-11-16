@@ -11,7 +11,7 @@ def image_display():
 
     # Initialize session state for directory paths and reload flag
     if "directory_path_1" not in st.session_state:
-        st.session_state["directory_path_1"] = ""
+        st.session_state["directory_path_1"] = os.getcwd()
     if "directory_path_2" not in st.session_state:
         st.session_state["directory_path_2"] = ""
     if "reload" not in st.session_state:
@@ -25,7 +25,7 @@ def image_display():
     directory_path_2 = st.sidebar.text_input("Enter second directory path", key="directory_path_2")
 
     # Image width and number of columns settings
-    image_width = st.sidebar.slider("Image width (px)", min_value=50, max_value=400, value=150, step=10)
+    image_width = st.sidebar.slider("Image width (px)", min_value=50, max_value=1000, value=300, step=10)
     num_columns = st.sidebar.slider("Number of Columns", min_value=1, max_value=5, value=2, step=1)
 
     # Reload button to refresh the images
