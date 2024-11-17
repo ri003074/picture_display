@@ -108,10 +108,7 @@ def image_display():
                             with cols[j]:
                                 # Center-align the image in each column
                                 st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                                if image_width_changed:
-                                    st.image(image_1, caption=file_name_1, width=image_width)
-                                else:
-                                    st.image(image_1, caption=file_name_1, use_container_width=True)
+                                st.image(image_1, caption=file_name_1, use_container_width=True)
                                 st.markdown("</div>", unsafe_allow_html=True)
                             progress_count += 1
                             progress_bar.progress(progress_count / total_images)
@@ -128,10 +125,7 @@ def image_display():
                             with cols[j]:
                                 # Center-align the image in each column
                                 st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                                if image_width_changed:
-                                    st.image(image_2, caption=file_name_2, width=image_width)
-                                else:
-                                    st.image(image_2, caption=file_name_2, use_container_width=True)
+                                st.image(image_2, caption=file_name_2, use_container_width=True)
                                 st.markdown("</div>", unsafe_allow_html=True)
                             progress_count += 1
                             progress_bar.progress(progress_count / total_images)
