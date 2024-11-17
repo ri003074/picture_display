@@ -16,6 +16,8 @@ def image_display():
         st.session_state["directory_path_2"] = ""
     if "reload" not in st.session_state:
         st.session_state["reload"] = False
+    if "prev_image_width" not in st.session_state:
+        st.session_state["prev_image_width"] = 150
 
     # Sidebar instructions
     st.sidebar.write("Please specify two directories containing PNG files.")
@@ -25,8 +27,14 @@ def image_display():
     directory_path_2 = st.sidebar.text_input("Enter second directory path", key="directory_path_2")
 
     # Image width and number of columns settings
-    # image_width = st.sidebar.slider("Image width (px)", min_value=50, max_value=1000, value=300, step=10)
-    num_columns = st.sidebar.slider("Number of Columns", min_value=1, max_value=5, value=2, step=1)
+    image_width = st.sidebar.slider("Image width (px)", min_value=50, max_value=1000, value=300, step=10)
+    num_columns = st.sidebar.slider("Number of Columns", min_value=1, max_value=10, value=2, step=1)
+
+    if image_width != st.session_state["prev_image_width"]:
+        st.session_state["prev_image_width"] = image_width
+        image_width_changed = True
+    else:
+        image_width_changed = False
 
     # Reload button to refresh the images
     if st.sidebar.button("Reload"):
@@ -59,8 +67,10 @@ def image_display():
                         with cols[0]:
                             # Center-align the image in the left column
                             st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                            # st.image(image_1, caption=file_name_1, width=image_width)
-                            st.image(image_1, caption=file_name_1, use_container_width=True)
+                            if image_width_changed:
+                                st.image(image_1, caption=file_name_1, width=image_width)
+                            else:
+                                st.image(image_1, caption=file_name_1, use_container_width=True)
                             st.markdown("</div>", unsafe_allow_html=True)
 
                     # Display images from directory 2 in the right column
@@ -71,8 +81,10 @@ def image_display():
                         with cols[1]:
                             # Center-align the image in the right column
                             st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                            # st.image(image_2, caption=file_name_2, width=image_width)
-                            st.image(image_2, caption=file_name_2, use_container_width=True)
+                            if image_width_changed:
+                                st.image(image_2, caption=file_name_2, width=image_width)
+                            else:
+                                st.image(image_2, caption=file_name_2, use_container_width=True)
                             st.markdown("</div>", unsafe_allow_html=True)
 
             # If only one directory is valid, display its images in multiple columns
@@ -88,8 +100,10 @@ def image_display():
                             with cols[j]:
                                 # Center-align the image in each column
                                 st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                                # st.image(image_1, caption=file_name_1, width=image_width)
-                                st.image(image_1, caption=file_name_1, use_container_width=True)
+                                if image_width_changed:
+                                    st.image(image_1, caption=file_name_1, width=image_width)
+                                else:
+                                    st.image(image_1, caption=file_name_1, use_container_width=True)
                                 st.markdown("</div>", unsafe_allow_html=True)
 
             elif valid_dir_2:
@@ -104,8 +118,10 @@ def image_display():
                             with cols[j]:
                                 # Center-align the image in each column
                                 st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                                # st.image(image_2, caption=file_name_2, width=image_width)
-                                st.image(image_2, caption=file_name_2, use_container_width=True)
+                                if image_width_changed:
+                                    st.image(image_2, caption=file_name_2, width=image_width)
+                                else:
+                                    st.image(image_2, caption=file_name_2, use_container_width=True)
                                 st.markdown("</div>", unsafe_allow_html=True)
 
         else:
