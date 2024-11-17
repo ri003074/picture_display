@@ -3,6 +3,25 @@ import os
 from PIL import Image
 
 
+def generate_series(n, col, mode=1):
+    base_right = []
+    base_left = []
+    if mode == 0:
+        for i in range(col):
+            base_right.append(i)
+            base_left.append(i+col)
+        return base_right*2*n, base_left*2*n
+
+    elif mode == 1:
+        arr = [i for i in range(n*2)]
+        for i, val in enumerate(arr):
+            if i % 2:
+                base_left.append(val)
+            else:
+                base_right.append(val)
+        return base_right, base_left
+
+
 def image_display():
     st.set_page_config(
         page_title="Image Display",  # Page title
@@ -27,14 +46,17 @@ def image_display():
     directory_path_2 = st.sidebar.text_input("Enter second directory path", key="directory_path_2")
 
     # Image width and number of columns settings
-    image_width = st.sidebar.slider("Image width (px)", min_value=50, max_value=1000, value=300, step=10)
+    # image_width = st.sidebar.slider("Image width (px)", min_value=50, max_value=1000, value=300, step=10)
+    options = ["mode1", "mode2"]
+    sort_option = st.sidebar.radio("Sorting Mode", options)
+    selected_sort_option_index = options.index(sort_option)
     num_columns = st.sidebar.slider("Number of Columns", min_value=1, max_value=10, value=2, step=1)
 
-    if image_width != st.session_state["prev_image_width"]:
-        st.session_state["prev_image_width"] = image_width
-        image_width_changed = True
-    else:
-        image_width_changed = False
+    # if image_width != st.session_state["prev_image_width"]:
+    #     st.session_state["prev_image_width"] = image_width
+    #     image_width_changed = True
+    # else:
+    #     image_width_changed = False
 
     # Reload button to refresh the images
     if st.sidebar.button("Reload"):
@@ -61,20 +83,20 @@ def image_display():
             # If both directories are valid, display images in two columns (side-by-side)
             if valid_dir_1 and valid_dir_2:
                 for i in range(0, max(len(png_files_1), len(png_files_2)), num_columns):
-                    cols = st.columns(2)  # Create two columns for side-by-side display
-
+                    cols = st.columns(num_columns*2)  # Create two columns for side-by-side display
+                    left, right = generate_series(max(len(png_files_1), len(png_files_2)), num_columns, selected_sort_option_index)
                     # Display images from directory 1 in the left column
                     for j in range(min(num_columns, len(png_files_1) - i)):
                         file_name_1 = png_files_1[i + j]
                         file_path_1 = os.path.join(directory_path_1, file_name_1)
                         image_1 = Image.open(file_path_1)
-                        with cols[0]:
+                        with cols[left[j]]:
                             # Center-align the image in the left column
                             st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                            if image_width_changed:
-                                st.image(image_1, caption=file_name_1, width=image_width)
-                            else:
-                                st.image(image_1, caption=file_name_1, use_container_width=True)
+                            # if image_width_changed:
+                            #     st.image(image_1, caption=file_name_1, width=image_width)
+                            # else:
+                            st.image(image_1, caption=file_name_1, use_container_width=True)
                             st.markdown("</div>", unsafe_allow_html=True)
                         progress_count += 1
                         progress_bar.progress(progress_count / total_images)
@@ -84,13 +106,13 @@ def image_display():
                         file_name_2 = png_files_2[i + j]
                         file_path_2 = os.path.join(directory_path_2, file_name_2)
                         image_2 = Image.open(file_path_2)
-                        with cols[1]:
+                        with cols[right[j]]:
                             # Center-align the image in the right column
                             st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                            if image_width_changed:
-                                st.image(image_2, caption=file_name_2, width=image_width)
-                            else:
-                                st.image(image_2, caption=file_name_2, use_container_width=True)
+                            # if image_width_changed:
+                            #     st.image(image_2, caption=file_name_2, width=image_width)
+                            # else:
+                            st.image(image_2, caption=file_name_2, use_container_width=True)
                             st.markdown("</div>", unsafe_allow_html=True)
                         progress_count += 1
                         progress_bar.progress(progress_count / total_images)
