@@ -25,7 +25,7 @@ def image_display():
     directory_path_2 = st.sidebar.text_input("Enter second directory path", key="directory_path_2")
 
     # Image width and number of columns settings
-    image_width = st.sidebar.slider("Image width (px)", min_value=50, max_value=1000, value=300, step=10)
+    # image_width = st.sidebar.slider("Image width (px)", min_value=50, max_value=1000, value=300, step=10)
     num_columns = st.sidebar.slider("Number of Columns", min_value=1, max_value=5, value=2, step=1)
 
     # Reload button to refresh the images
@@ -59,7 +59,8 @@ def image_display():
                         with cols[0]:
                             # Center-align the image in the left column
                             st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                            st.image(image_1, caption=file_name_1, width=image_width)
+                            # st.image(image_1, caption=file_name_1, width=image_width)
+                            st.image(image_1, caption=file_name_1, use_container_width=True)
                             st.markdown("</div>", unsafe_allow_html=True)
 
                     # Display images from directory 2 in the right column
@@ -70,7 +71,8 @@ def image_display():
                         with cols[1]:
                             # Center-align the image in the right column
                             st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                            st.image(image_2, caption=file_name_2, width=image_width)
+                            # st.image(image_2, caption=file_name_2, width=image_width)
+                            st.image(image_2, caption=file_name_2, use_container_width=True)
                             st.markdown("</div>", unsafe_allow_html=True)
 
             # If only one directory is valid, display its images in multiple columns
@@ -86,7 +88,8 @@ def image_display():
                             with cols[j]:
                                 # Center-align the image in each column
                                 st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                                st.image(image_1, caption=file_name_1, width=image_width)
+                                # st.image(image_1, caption=file_name_1, width=image_width)
+                                st.image(image_1, caption=file_name_1, use_container_width=True)
                                 st.markdown("</div>", unsafe_allow_html=True)
 
             elif valid_dir_2:
@@ -101,7 +104,8 @@ def image_display():
                             with cols[j]:
                                 # Center-align the image in each column
                                 st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                                st.image(image_2, caption=file_name_2, width=image_width)
+                                # st.image(image_2, caption=file_name_2, width=image_width)
+                                st.image(image_2, caption=file_name_2, use_container_width=True)
                                 st.markdown("</div>", unsafe_allow_html=True)
 
         else:
@@ -112,3 +116,7 @@ def image_display():
             st.error("Both directory paths are invalid.")
     else:
         st.info("Please specify at least one directory.")
+
+
+if __name__ == '__main__':
+    image_display()
