@@ -50,6 +50,10 @@ def image_display():
         png_files_1 = [f for f in os.listdir(directory_path_1) if f.endswith('.png')] if valid_dir_1 else []
         png_files_2 = [f for f in os.listdir(directory_path_2) if f.endswith('.png')] if valid_dir_2 else []
 
+        total_images = len(png_files_1) + len(png_files_2)
+        progress_bar = st.progress(0)  # Initialize progress bar
+        progress_count = 0  # Track the current progress
+
         # Display PNG files if they exist in any directory
         if png_files_1 or png_files_2:
             st.title("PNG File Gallery")
@@ -72,6 +76,8 @@ def image_display():
                             else:
                                 st.image(image_1, caption=file_name_1, use_container_width=True)
                             st.markdown("</div>", unsafe_allow_html=True)
+                        progress_count += 1
+                        progress_bar.progress(progress_count / total_images)
 
                     # Display images from directory 2 in the right column
                     for j in range(min(num_columns, len(png_files_2) - i)):
@@ -86,6 +92,8 @@ def image_display():
                             else:
                                 st.image(image_2, caption=file_name_2, use_container_width=True)
                             st.markdown("</div>", unsafe_allow_html=True)
+                        progress_count += 1
+                        progress_bar.progress(progress_count / total_images)
 
             # If only one directory is valid, display its images in multiple columns
             elif valid_dir_1:
@@ -105,6 +113,8 @@ def image_display():
                                 else:
                                     st.image(image_1, caption=file_name_1, use_container_width=True)
                                 st.markdown("</div>", unsafe_allow_html=True)
+                            progress_count += 1
+                            progress_bar.progress(progress_count / total_images)
 
             elif valid_dir_2:
                 st.write("Displaying images from Directory 2")
@@ -123,6 +133,8 @@ def image_display():
                                 else:
                                     st.image(image_2, caption=file_name_2, use_container_width=True)
                                 st.markdown("</div>", unsafe_allow_html=True)
+                            progress_count += 1
+                            progress_bar.progress(progress_count / total_images)
 
         else:
             st.warning("No PNG files found in the specified directories.")
