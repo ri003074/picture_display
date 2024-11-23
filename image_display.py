@@ -7,9 +7,6 @@ class RefNumber:
     def __init__(self, value):
         self.value = value
 
-    def divide(self, divisor):
-        self.value /= divisor
-
     def add(self, amount):
         self.value += amount
 
@@ -39,13 +36,13 @@ def put_image(num, png_files, directory_path, num_columns, progress_count):
         cols = st.columns(num_columns)  # Create specified number of columns
         for j in range(num_columns):
             if i + j < len(png_files):  # Check index range
-                file_name_3 = png_files[i + j]
-                file_path_3 = os.path.join(directory_path, file_name_3)
-                image_3 = Image.open(file_path_3)
+                file_name = png_files[i + j]
+                file_path = os.path.join(directory_path, file_name)
+                image = Image.open(file_path)
                 with cols[j]:
                     # Center-align the image in each column
                     st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-                    st.image(image_3, caption=file_name_3, use_container_width=True)
+                    st.image(image, caption=file_name, use_container_width=True)
                     st.markdown("</div>", unsafe_allow_html=True)
                     progress_count.add(1)
 
