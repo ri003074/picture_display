@@ -1,6 +1,29 @@
 import streamlit as st
 import os
+import pyautogui
+import time
+from datetime import datetime
 from PIL import Image
+from io import BytesIO
+
+
+def take_screenshot(left, top, right, bottom):
+    # Take a screenshot of the specified region
+    screenshot = pyautogui.screenshot(region=(left, top, right - left, bottom - top))
+
+    # Generate a timestamp for the filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    save_path = f"screenshot_{timestamp}.png"
+
+    # Save the screenshot
+    screenshot.save(save_path)
+
+    # Convert the screenshot to binary format
+    img_byte_arr = BytesIO()
+    screenshot.save(img_byte_arr, format='PNG')
+    img_byte_arr.seek(0)  # Reset pointer to the beginning
+
+    return img_byte_arr, save_path
 
 
 class RefNumber:
@@ -100,6 +123,38 @@ def image_display():
     # Reload button to refresh the images
     if st.sidebar.button("Reload"):
         st.session_state["reload"] = not st.session_state["reload"]  # Toggle reload flag
+
+    # Sidebar inputs for coordinates
+    st.sidebar.header("Enter the coordinates of the area to capture")
+    left = st.sidebar.number_input("Left X-coordinate", min_value=0, value=0)
+    top = st.sidebar.number_input("Top Y-coordinate", min_value=0, value=0)
+    right = st.sidebar.number_input("Right X-coordinate", min_value=left + 1, value=500)
+    bottom = st.sidebar.number_input("Bottom Y-coordinate", min_value=top + 1, value=500)
+
+    # Warning if right or bottom coordinates are smaller than left or top
+    if right <= left or bottom <= top:
+        st.sidebar.warning("The right and bottom coordinates must be greater than the left and top coordinates.")
+
+    # Button to take the screenshot when clicked
+    if st.sidebar.button("Capture Screenshot"):
+        st.write("Preparing to capture the screenshot... Starting in 5 seconds...")
+
+        # Wait for 5 seconds before capturing
+        time.sleep(5)
+
+        # Take the screenshot
+        img_byte_arr, save_path = take_screenshot(left, top, right, bottom)
+
+        # Display the captured screenshot
+        st.image(img_byte_arr, caption=f"Saved image: {save_path}", use_container_width=True)
+
+        # Provide a download button for the screenshot
+        # st.download_button(
+        #     label="Download Image",
+        #     data=img_byte_arr,
+        #     file_name=save_path,
+        #     mime="image/png"
+        # )
 
     # Display images if valid directory paths are provided
     if directory_path_1 or directory_path_2 or directory_path_3 or directory_path_4 or directory_path_5:
