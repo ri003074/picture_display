@@ -49,12 +49,12 @@ def put_image(num, png_files, directory_path, num_columns, progress_count):
 
 def put_image2(png_files, directory_path, num_columns, index, cols, position, progress_count):
     for j in range(min(num_columns, len(png_files) - index)):
-        file_name_1 = png_files[index + j]
-        file_path_1 = os.path.join(directory_path, file_name_1)
-        image_1 = Image.open(file_path_1)
+        file_name = png_files[index + j]
+        file_path = os.path.join(directory_path, file_name)
+        image = Image.open(file_path)
         with cols[position[j]]:
             st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-            st.image(image_1, caption=file_name_1, use_container_width=True)
+            st.image(image, caption=file_name, use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
             progress_count.add(1)
 
