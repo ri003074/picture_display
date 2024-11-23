@@ -118,6 +118,12 @@ def image_display():
         png_files_4 = [f for f in os.listdir(directory_path_4) if f.endswith('.png')] if valid_dir_4 else []
         png_files_5 = [f for f in os.listdir(directory_path_5) if f.endswith('.png')] if valid_dir_5 else []
 
+        png_files_1.sort()
+        png_files_2.sort()
+        png_files_3.sort()
+        png_files_4.sort()
+        png_files_5.sort()
+
         total_images = len(png_files_1) + len(png_files_2) + len(png_files_3) + len(png_files_4) + len(png_files_5)
         progress_bar = st.progress(0)  # Initialize progress bar
         progress_count = RefNumber(0)  # Track the current progress
