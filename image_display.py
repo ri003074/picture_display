@@ -88,6 +88,18 @@ def image_display():
         layout="wide"  # Set layout to "wide"
     )
 
+    # Inject custom CSS to set the width of the sidebar
+    st.markdown(
+        """
+        <style>
+            section[data-testid="stSidebar"] {
+                width: 300px !important; # Set the width to your desired value
+            }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
     # Initialize session state for directory paths and reload flag
     if "directory_path_1" not in st.session_state:
         st.session_state["directory_path_1"] = os.getcwd()
@@ -126,10 +138,10 @@ def image_display():
 
     # Sidebar inputs for coordinates
     st.sidebar.header("Enter the coordinates of the area to capture")
-    left = st.sidebar.number_input("Left X-coordinate", min_value=0, value=0)
-    top = st.sidebar.number_input("Top Y-coordinate", min_value=0, value=0)
-    right = st.sidebar.number_input("Right X-coordinate", min_value=left + 1, value=500)
-    bottom = st.sidebar.number_input("Bottom Y-coordinate", min_value=top + 1, value=500)
+    left = st.sidebar.number_input("Left X-coordinate", min_value=0, value=300)
+    top = st.sidebar.number_input("Top Y-coordinate", min_value=0, value=200)
+    right = st.sidebar.number_input("Right X-coordinate", min_value=left + 1, value=1800)
+    bottom = st.sidebar.number_input("Bottom Y-coordinate", min_value=top + 1, value=1000)
 
     # Warning if right or bottom coordinates are smaller than left or top
     if right <= left or bottom <= top:
