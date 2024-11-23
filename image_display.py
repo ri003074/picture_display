@@ -1,6 +1,5 @@
 import streamlit as st
 import os
-import ctypes
 from PIL import Image
 
 
@@ -106,7 +105,7 @@ def image_display():
         st.session_state["reload"] = not st.session_state["reload"]  # Toggle reload flag
 
     # Display images if valid directory paths are provided
-    if directory_path_1 or directory_path_2 or directory_path_3 or directory_path_4 or directory_path_5:  # At least one directory should be specified
+    if directory_path_1 or directory_path_2 or directory_path_3 or directory_path_4 or directory_path_5:
 
         # Check if both directories exist
         valid_dir_1 = os.path.isdir(directory_path_1)
