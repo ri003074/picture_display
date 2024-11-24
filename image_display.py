@@ -201,24 +201,24 @@ def image_display():
                 num_columns = 3
                 for i in range(0, max(len(png_files[0]), len(png_files[1]), len(png_files[2])), num_columns):
                     cols = st.columns(num_columns)  # Create three columns
-                    for k in range(num_columns):
-                        put_image2(png_files[k], directory_paths[k], num_columns, i, cols, [k]*len(png_files[k])*num_columns, progress_count)
+                    for num_column in range(num_columns):
+                        put_image2(png_files[num_column], directory_paths[num_column], num_columns, i, cols, [num_column]*len(png_files[num_column])*num_columns, progress_count)
                         progress_bar.progress(progress_count.value/total_images)
 
             elif all(valid_dirs[0:4]) and not any(valid_dirs[4:DIR_COUNT]):
                 num_columns = 4
                 for i in range(0, max(len(png_files[0]), len(png_files[1]), len(png_files[2]), len(png_files[3])), num_columns):
                     cols = st.columns(num_columns)  # Create three columns
-                    for k in range(num_columns):
-                        put_image2(png_files[k], directory_paths[k], num_columns, i, cols, [k]*len(png_files[k])*num_columns, progress_count)
+                    for num_column in range(num_columns):
+                        put_image2(png_files[num_column], directory_paths[num_column], num_columns, i, cols, [num_column]*len(png_files[num_column])*num_columns, progress_count)
                         progress_bar.progress(progress_count.value/total_images)
 
             elif all(valid_dirs):
                 num_columns = 5
                 for i in range(0, max(len(png_files[0]), len(png_files[1]), len(png_files[2]), len(png_files[3]), len(png_files[4])), num_columns):
                     cols = st.columns(num_columns)  # Create three columns
-                    for k in range(num_columns):
-                        put_image2(png_files[k], directory_paths[k], num_columns, i, cols, [k]*len(png_files[k])*num_columns, progress_count)
+                    for num_column in range(num_columns):
+                        put_image2(png_files[num_column], directory_paths[num_column], num_columns, i, cols, [num_column]*len(png_files[num_column])*num_columns, progress_count)
                         progress_bar.progress(progress_count.value/total_images)
 
             # If only one directory is valid, display its images in multiple columns
