@@ -120,11 +120,10 @@ def image_display():
     st.sidebar.write("Please specify two directories containing PNG files.")
 
     # Directory path input fields
-    directory_path_1 = st.sidebar.text_input("Enter 1st directory path", key="directory_path_1")
-    directory_path_2 = st.sidebar.text_input("Enter 2nd directory path", key="directory_path_2")
-    directory_path_3 = st.sidebar.text_input("Enter 3rd directory path", key="directory_path_3")
-    directory_path_4 = st.sidebar.text_input("Enter 4th directory path", key="directory_path_4")
-    directory_path_5 = st.sidebar.text_input("Enter 5th directory path", key="directory_path_5")
+    directory_paths = []
+    for i in range(0, 5):
+        path = st.sidebar.text_input(f"Enter {i+1}st directory path", key=f"directory_path_{i+1}")
+        directory_paths.append(path)
 
     # Image width and number of columns settings
     options = ["mode1", "mode2"]
@@ -160,116 +159,79 @@ def image_display():
         # Display the captured screenshot
         st.image(img_byte_arr, caption=f"Saved image: {save_path}", use_container_width=True)
 
-        # Provide a download button for the screenshot
-        # st.download_button(
-        #     label="Download Image",
-        #     data=img_byte_arr,
-        #     file_name=save_path,
-        #     mime="image/png"
-        # )
-
     # Display images if valid directory paths are provided
-    if directory_path_1 or directory_path_2 or directory_path_3 or directory_path_4 or directory_path_5:
+    if any(directory_paths):
 
         # Check if both directories exist
-        valid_dir_1 = os.path.isdir(directory_path_1)
-        valid_dir_2 = os.path.isdir(directory_path_2)
-        valid_dir_3 = os.path.isdir(directory_path_3)
-        valid_dir_4 = os.path.isdir(directory_path_4)
-        valid_dir_5 = os.path.isdir(directory_path_5)
+        valid_dirs = []
+        for i in range(0, 5):
+            valid_dir = os.path.isdir(directory_paths[i])
+            valid_dirs.append(valid_dir)
 
         # Get PNG files from both directories if valid
-        png_files_1 = [f for f in os.listdir(directory_path_1) if f.endswith('.png')] if valid_dir_1 else []
-        png_files_2 = [f for f in os.listdir(directory_path_2) if f.endswith('.png')] if valid_dir_2 else []
-        png_files_3 = [f for f in os.listdir(directory_path_3) if f.endswith('.png')] if valid_dir_3 else []
-        png_files_4 = [f for f in os.listdir(directory_path_4) if f.endswith('.png')] if valid_dir_4 else []
-        png_files_5 = [f for f in os.listdir(directory_path_5) if f.endswith('.png')] if valid_dir_5 else []
+        png_files = []
+        for i in range(0, 5):
+            png_file = [f for f in os.listdir(directory_paths[i]) if f.endswith('.png')] if valid_dirs[i] else []
+            png_file.sort()
+            png_files.append(png_file)
 
-        png_files_1.sort()
-        png_files_2.sort()
-        png_files_3.sort()
-        png_files_4.sort()
-        png_files_5.sort()
-
-        total_images = len(png_files_1) + len(png_files_2) + len(png_files_3) + len(png_files_4) + len(png_files_5)
+        total_images = 0
+        for i in range(0, 5):
+            total_images += len(png_files[i])
         progress_bar = st.progress(0)  # Initialize progress bar
         progress_count = RefNumber(0)  # Track the current progress
 
         # Display PNG files if they exist in any directory
-        if png_files_1 or png_files_2 or png_files_3 or png_files_4 or png_files_5:
+        if any(png_files):
             st.title("PNG File Gallery")
 
             # If both directories are valid, display images in two columns (side-by-side)
-            if valid_dir_1 and valid_dir_2 and not valid_dir_3 and not valid_dir_4 and not valid_dir_5:
-                for i in range(0, max(len(png_files_1), len(png_files_2)), num_columns):
+            if all(valid_dirs[0:2]) and not any(valid_dirs[2:5]):
+                for i in range(0, max(len(png_files[0]), len(png_files[1])), num_columns):
                     cols = st.columns(num_columns*2)  # Create two columns for side-by-side display
-                    left, right = generate_series(max(len(png_files_1), len(png_files_2)), num_columns, selected_sort_option_index)
-                    put_image2(png_files_1, directory_path_1, num_columns, i, cols, left, progress_count)
+                    left, right = generate_series(max(len(png_files[0]), len(png_files[1])), num_columns, selected_sort_option_index)
+                    put_image2(png_files[0], directory_paths[0], num_columns, i, cols, left, progress_count)
                     progress_bar.progress(progress_count.value/total_images)
-                    put_image2(png_files_2, directory_path_2, num_columns, i, cols, right, progress_count)
+                    put_image2(png_files[1], directory_paths[1], num_columns, i, cols, right, progress_count)
                     progress_bar.progress(progress_count.value/total_images)
 
-            elif valid_dir_1 and valid_dir_2 and valid_dir_3 and not valid_dir_4 and not valid_dir_5:
+            elif all(valid_dirs[0:3]) and not any(valid_dirs[3:5]):
                 num_columns = 3
-                for i in range(0, max(len(png_files_1), len(png_files_2), len(png_files_3)), num_columns):
+                for i in range(0, max(len(png_files[0]), len(png_files[1]), len(png_files[2])), num_columns):
                     cols = st.columns(num_columns)  # Create three columns
-                    put_image2(png_files_1, directory_path_1, num_columns, i, cols, [0]*len(png_files_1)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
-                    put_image2(png_files_2, directory_path_2, num_columns, i, cols, [1]*len(png_files_2)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
-                    put_image2(png_files_3, directory_path_3, num_columns, i, cols, [2]*len(png_files_3)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
+                    for k in range(num_columns):
+                        put_image2(png_files[k], directory_paths[k], num_columns, i, cols, [k]*len(png_files[k])*num_columns, progress_count)
+                        progress_bar.progress(progress_count.value/total_images)
 
-            elif valid_dir_1 and valid_dir_2 and valid_dir_3 and valid_dir_4 and not valid_dir_5:
+            elif all(valid_dirs[0:4]) and not any(valid_dirs[4:6]):
                 num_columns = 4
-                for i in range(0, max(len(png_files_1), len(png_files_2), len(png_files_3), len(png_files_4)), num_columns):
+                for i in range(0, max(len(png_files[0]), len(png_files[1]), len(png_files[2]), len(png_files[3])), num_columns):
                     cols = st.columns(num_columns)  # Create three columns
-                    put_image2(png_files_1, directory_path_1, num_columns, i, cols, [0]*len(png_files_1)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
-                    put_image2(png_files_2, directory_path_2, num_columns, i, cols, [1]*len(png_files_2)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
-                    put_image2(png_files_3, directory_path_3, num_columns, i, cols, [2]*len(png_files_3)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
-                    put_image2(png_files_4, directory_path_4, num_columns, i, cols, [3]*len(png_files_4)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
+                    for k in range(num_columns):
+                        put_image2(png_files[k], directory_paths[k], num_columns, i, cols, [k]*len(png_files[k])*num_columns, progress_count)
+                        progress_bar.progress(progress_count.value/total_images)
 
-            elif valid_dir_1 and valid_dir_2 and valid_dir_3 and valid_dir_4 and valid_dir_5:
+            elif all(valid_dirs):
                 num_columns = 5
-                for i in range(0, max(len(png_files_1), len(png_files_2), len(png_files_3), len(png_files_4), len(png_files_5)), num_columns):
+                for i in range(0, max(len(png_files[0]), len(png_files[1]), len(png_files[2]), len(png_files[3]), len(png_files[4])), num_columns):
                     cols = st.columns(num_columns)  # Create three columns
-                    put_image2(png_files_1, directory_path_1, num_columns, i, cols, [0]*len(png_files_1)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
-                    put_image2(png_files_2, directory_path_2, num_columns, i, cols, [1]*len(png_files_2)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
-                    put_image2(png_files_3, directory_path_3, num_columns, i, cols, [2]*len(png_files_3)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
-                    put_image2(png_files_4, directory_path_4, num_columns, i, cols, [3]*len(png_files_4)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
-                    put_image2(png_files_5, directory_path_5, num_columns, i, cols, [4]*len(png_files_4)*num_columns, progress_count)
-                    progress_bar.progress(progress_count.value/total_images)
+                    for k in range(num_columns):
+                        put_image2(png_files[k], directory_paths[k], num_columns, i, cols, [k]*len(png_files[k])*num_columns, progress_count)
+                        progress_bar.progress(progress_count.value/total_images)
 
             # If only one directory is valid, display its images in multiple columns
-            elif valid_dir_1:
-                put_image(1, png_files_1, directory_path_1, num_columns, progress_count)
-                progress_bar.progress(progress_count.value / total_images)
-            elif valid_dir_2:
-                put_image(2, png_files_2, directory_path_2, num_columns, progress_count)
-                progress_bar.progress(progress_count.value / total_images)
-            elif valid_dir_3:
-                put_image(3, png_files_3, directory_path_3, num_columns, progress_count)
-                progress_bar.progress(progress_count.value / total_images)
-            elif valid_dir_4:
-                put_image(4, png_files_4, directory_path_4, num_columns, progress_count)
-                progress_bar.progress(progress_count.value / total_images)
-            elif valid_dir_5:
-                put_image(5, png_files_5, directory_path_5, num_columns, progress_count)
-                progress_bar.progress(progress_count.value / total_images)
+            else:
+                for i, is_valid in enumerate(valid_dirs):
+                    if is_valid:
+                        put_image(i + 1, png_files[i], directory_paths[i], num_columns, progress_count)
+                        progress_bar.progress(progress_count.value / total_images)
+                        break
 
         else:
             st.warning("No PNG files found in the specified directories.")
 
         # If no directories are valid
-        if not valid_dir_1 and not valid_dir_2 and not valid_dir_3 and not valid_dir_4 and not valid_dir_5:
+        if not any(valid_dirs):
             st.error("All directory paths are invalid.")
     else:
         st.info("Please specify at least one directory.")
