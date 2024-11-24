@@ -103,16 +103,9 @@ def image_display():
     )
 
     # Initialize session state for directory paths and reload flag
-    if "directory_path_1" not in st.session_state:
-        st.session_state["directory_path_1"] = os.getcwd()
-    if "directory_path_2" not in st.session_state:
-        st.session_state["directory_path_2"] = ""
-    if "directory_path_3" not in st.session_state:
-        st.session_state["directory_path_3"] = ""
-    if "directory_path_4" not in st.session_state:
-        st.session_state["directory_path_4"] = ""
-    if "directory_path_5" not in st.session_state:
-        st.session_state["directory_path_5"] = ""
+    for i in range(DIR_COUNT):
+        if "directory_path_" + str(i+1) not in st.session_state:
+            st.session_state["directory_path_" + str(i+1)] = os.getcwd()
     if "reload" not in st.session_state:
         st.session_state["reload"] = False
     if "prev_image_width" not in st.session_state:
