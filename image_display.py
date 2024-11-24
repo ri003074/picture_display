@@ -9,13 +9,13 @@ from io import BytesIO
 DIR_COUNT = 5
 
 
-def take_screenshot(left, top, right, bottom):
+def take_screenshot(title, left, top, right, bottom):
     # Take a screenshot of the specified region
     screenshot = pyautogui.screenshot(region=(left, top, right - left, bottom - top))
 
     # Generate a timestamp for the filename
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    save_path = f"screenshot_{timestamp}_{left}_{top}_{right}_{bottom}.png"
+    save_path = f"screenshot_{timestamp}_{title}_{left}_{top}_{right}_{bottom}.png"
 
     # Save the screenshot
     screenshot.save(save_path)
@@ -136,6 +136,7 @@ def image_display():
     top = st.sidebar.number_input("Top Y-coordinate", min_value=0, value=200)
     right = st.sidebar.number_input("Right X-coordinate", min_value=left + 1, value=1800)
     bottom = st.sidebar.number_input("Bottom Y-coordinate", min_value=top + 1, value=1000)
+    sc_title = st.sidebar.text_input("Title")
 
     # Warning if right or bottom coordinates are smaller than left or top
     if right <= left or bottom <= top:
@@ -145,7 +146,7 @@ def image_display():
     if st.sidebar.button("Capture Screenshot"):
 
         # Take the screenshot
-        img_byte_arr, save_path = take_screenshot(left, top, right, bottom)
+        img_byte_arr, save_path = take_screenshot(sc_title, left, top, right, bottom)
 
         # Display the captured screenshot
         st.image(img_byte_arr, caption=f"Saved image: {save_path}", use_container_width=True)
