@@ -15,7 +15,7 @@ def take_screenshot(left, top, right, bottom):
 
     # Generate a timestamp for the filename
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    save_path = f"screenshot_{timestamp}.png"
+    save_path = f"screenshot_{timestamp}_{left}_{top}_{right}_{bottom}.png"
 
     # Save the screenshot
     screenshot.save(save_path)
@@ -105,7 +105,7 @@ def image_display():
     # Initialize session state for directory paths and reload flag
     for i in range(DIR_COUNT):
         if "directory_path_" + str(i+1) not in st.session_state:
-            st.session_state["directory_path_" + str(i+1)] = os.getcwd()
+            st.session_state["directory_path_" + str(i+1)] = ""
     if "reload" not in st.session_state:
         st.session_state["reload"] = False
     if "prev_image_width" not in st.session_state:
@@ -143,10 +143,6 @@ def image_display():
 
     # Button to take the screenshot when clicked
     if st.sidebar.button("Capture Screenshot"):
-        st.write("Preparing to capture the screenshot... Starting in 5 seconds...")
-
-        # Wait for 5 seconds before capturing
-        time.sleep(5)
 
         # Take the screenshot
         img_byte_arr, save_path = take_screenshot(left, top, right, bottom)
