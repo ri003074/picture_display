@@ -6,6 +6,8 @@ from datetime import datetime
 from PIL import Image
 from io import BytesIO
 
+DIR_COUNT = 5
+
 
 def take_screenshot(left, top, right, bottom):
     # Take a screenshot of the specified region
@@ -121,7 +123,7 @@ def image_display():
 
     # Directory path input fields
     directory_paths = []
-    for i in range(0, 5):
+    for i in range(0, DIR_COUNT):
         path = st.sidebar.text_input(f"Enter {i+1}st directory path", key=f"directory_path_{i+1}")
         directory_paths.append(path)
 
@@ -164,19 +166,19 @@ def image_display():
 
         # Check if both directories exist
         valid_dirs = []
-        for i in range(0, 5):
+        for i in range(0, DIR_COUNT):
             valid_dir = os.path.isdir(directory_paths[i])
             valid_dirs.append(valid_dir)
 
         # Get PNG files from both directories if valid
         png_files = []
-        for i in range(0, 5):
+        for i in range(0, DIR_COUNT):
             png_file = [f for f in os.listdir(directory_paths[i]) if f.endswith('.png')] if valid_dirs[i] else []
             png_file.sort()
             png_files.append(png_file)
 
         total_images = 0
-        for i in range(0, 5):
+        for i in range(0, DIR_COUNT):
             total_images += len(png_files[i])
         progress_bar = st.progress(0)  # Initialize progress bar
         progress_count = RefNumber(0)  # Track the current progress
@@ -186,7 +188,7 @@ def image_display():
             st.title("PNG File Gallery")
 
             # If both directories are valid, display images in two columns (side-by-side)
-            if all(valid_dirs[0:2]) and not any(valid_dirs[2:5]):
+            if all(valid_dirs[0:2]) and not any(valid_dirs[2:DIR_COUNT]):
                 for i in range(0, max(len(png_files[0]), len(png_files[1])), num_columns):
                     cols = st.columns(num_columns*2)  # Create two columns for side-by-side display
                     left, right = generate_series(max(len(png_files[0]), len(png_files[1])), num_columns, selected_sort_option_index)
@@ -195,7 +197,7 @@ def image_display():
                     put_image2(png_files[1], directory_paths[1], num_columns, i, cols, right, progress_count)
                     progress_bar.progress(progress_count.value/total_images)
 
-            elif all(valid_dirs[0:3]) and not any(valid_dirs[3:5]):
+            elif all(valid_dirs[0:3]) and not any(valid_dirs[3:DIR_COUNT]):
                 num_columns = 3
                 for i in range(0, max(len(png_files[0]), len(png_files[1]), len(png_files[2])), num_columns):
                     cols = st.columns(num_columns)  # Create three columns
@@ -203,7 +205,7 @@ def image_display():
                         put_image2(png_files[k], directory_paths[k], num_columns, i, cols, [k]*len(png_files[k])*num_columns, progress_count)
                         progress_bar.progress(progress_count.value/total_images)
 
-            elif all(valid_dirs[0:4]) and not any(valid_dirs[4:6]):
+            elif all(valid_dirs[0:4]) and not any(valid_dirs[4:DIR_COUNT]):
                 num_columns = 4
                 for i in range(0, max(len(png_files[0]), len(png_files[1]), len(png_files[2]), len(png_files[3])), num_columns):
                     cols = st.columns(num_columns)  # Create three columns
