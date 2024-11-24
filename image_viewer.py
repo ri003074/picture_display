@@ -86,7 +86,7 @@ def put_image2(png_files, directory_path, num_columns, index, cols, position, pr
 
 def image_display():
     st.set_page_config(
-        page_title="Image Display",  # Page title
+        page_title="Image Viewer",  # Page title
         layout="wide"  # Set layout to "wide"
     )
 
