@@ -119,6 +119,8 @@ def image_display():
         path = st.sidebar.text_input(f"Enter {i+1}st directory path", key=f"directory_path_{i+1}")
         directory_paths.append(path)
 
+    keyword = st.sidebar.text_input("keyword for filtering", key="keyword")
+
     # Image width and number of columns settings
     options = ["mode1", "mode2"]
     sort_option = st.sidebar.radio("Sorting Mode", options)
@@ -164,6 +166,12 @@ def image_display():
         for i in range(0, DIR_COUNT):
             png_file = [f for f in os.listdir(directory_paths[i]) if f.endswith('.png')] if valid_dirs[i] else []
             png_file.sort()
+            if keyword != "":
+                keywords = keyword.split(",")
+                png_file = [file for file in png_file
+                            if all(keyword in file for keyword in keywords)
+                            ]
+
             png_files.append(png_file)
 
         total_images = 0
