@@ -119,6 +119,9 @@ def image_display():
         path = st.sidebar.text_input(f"Enter {i+1}st directory path", key=f"directory_path_{i+1}")
         directory_paths.append(path)
 
+    keyword_search_options = ["And", "Or"]
+    keyword_search_option = st.sidebar.radio("Keyword Search Mode", keyword_search_options)
+    selected_keyword_search_option_index = keyword_search_options.index(keyword_search_option)
     keyword = st.sidebar.text_input("keyword for filtering", key="keyword")
 
     # Image width and number of columns settings
@@ -168,9 +171,10 @@ def image_display():
             png_file.sort()
             if keyword != "":
                 keywords = keyword.split(",")
-                png_file = [file for file in png_file
-                            if all(keyword in file for keyword in keywords)
-                            ]
+                if selected_keyword_search_option_index == 0:
+                    png_file = [file for file in png_file if all(keyword in file for keyword in keywords) ]
+                elif selected_keyword_search_option_index == 1:
+                    png_file = [file for file in png_file if any(keyword in file for keyword in keywords) ]
 
             png_files.append(png_file)
 
